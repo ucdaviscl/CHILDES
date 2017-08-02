@@ -33,11 +33,13 @@ foreach my $fname ( @flist ) {
 	my $pobjcount = 0;
 	my $matchcount = 0;
 
-	# divide CoNLL formatted text into columns
+	# for each line in file
 	for( my $i = 0; $i < @lines; $i++ ) {
+		
+		# divide CoNLL formatted text into columns
 		my @cols = split "\t", $lines[$i];
-
-		push @output, $lines[$i];
+		
+		push @output, $lines[$i]; # output buffer
 
 		# ----- denotes the end of an utterance "block"
 		if( $lines[$i] =~ /\-\-\-\-\-/ ) {
@@ -52,6 +54,8 @@ foreach my $fname ( @flist ) {
 					my %match;
 
 					foreach my $head ( @heads ) {
+						
+						# continue iterating unless we find a match
 						next unless $match{ $head }++;
 	
 						$matchcount++;
@@ -111,7 +115,8 @@ foreach my $fname ( @flist ) {
 			$prepcount++;
 			push @heads, $cols[6];
 		}
-    
+    	
+		# if current word is a prepositional object
 		if( $cols[7] =~ /POBJ/ ) {
 			$pobjcount++;
 		}
