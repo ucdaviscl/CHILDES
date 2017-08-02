@@ -7,8 +7,8 @@ my $dirname = shift;
 
 # get all files of .cha extension
 my @flist = File::Find::Rule->file()
-							->name( '*.cha' )
-							->in( $dirname );
+                            ->name( '*.cha' )
+                            ->in( $dirname );
 
 foreach my $fname ( @flist ) {
 
