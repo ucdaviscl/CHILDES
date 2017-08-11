@@ -7,19 +7,26 @@ from nltk.corpus.reader import WordListCorpusReader
 
 start_time = time.time()
 
-words = sys.argv[1] # conllwords.txt
-text = sys.argv[2] # file containing prepositional phrases to be analyzed (output.txt)
+all_words = sys.argv[1] # conllwords.txt
+vocab = sys.argv[2] # conllfdistwords.txt
+text = sys.argv[3] # file containing prepositional phrases to be analyzed (output.txt)
 
 fdict = {} # dictionary with word / word count pairs
 lines = defaultdict( list )
 output = []
 i = 0
+p = 0
 
-reader = WordListCorpusReader( '.', words )
-words = reader.words() # grab word from each line of text
-fdist = FreqDist( w.lower() for w in words ) # generate frequency distribution
+# generate frequency distribution based on all words in CHILDES corpus
+all_words_reader = WordListCorpusReader( '.', all_words )
+tok_words = all_words_reader.words() # grab word from each line of text
+fdist = FreqDist( w.lower() for w in tok_words ) 
 
-for w in words:
+# calculate word frequencies based on vocabulary
+vocab_reader = WordListCorpusReader( '.', vocab )
+tok_vocab = vocab_reader.words() # grab word from each line of text
+
+for w in tok_vocab:
     fdict[w] = fdist.freq(w) # get frequency of each word in vocabulary
     
 with open( 'long2short_unigrams.txt', 'w' ) as file1, open( text, 'r' ) as file2:
