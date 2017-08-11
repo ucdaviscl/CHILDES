@@ -12,8 +12,6 @@ my $outfile = "advoutput.txt";
 open my $fh, '>', $outfile or die "Cannot open $outfile\n";
 
 foreach my $fname ( @flist ) {
-print "hello\n";
-
   open FP, $fname or die "Cannot open $fname\n";
 
   my $str = "";
@@ -47,7 +45,6 @@ print "hello\n";
 
     # get length of sentence
     for( my $k = 0; $k < @lines; $k++ ) {
-        print "over here\n";
          @{$cols{$k}} = split "\t", $lines[$k]; 
 
          if( $cols{$k}->[0] =~ /^\d/ ) {
@@ -65,7 +62,6 @@ print "hello\n";
   my $idx = 0;
   
   for( my $i = 0; $i < @lines; $i++ ) {
-    print "here\n";
      if( $cols{$i}->[3] =~ /prep/ ) {
         push @phrase_idxs, $cols{$i}->[0]; # push prep index
 
@@ -75,7 +71,6 @@ print "hello\n";
 
         for( my $j = $i + 1; $j < @lines; $j++ ) {
             if( $cols{$j}->[7] =~ /POBJ/ ) {
-                print "in here\n";
                 push @phrase_idxs, $cols{$j}->[0];
                 push @stack, $cols{$j}->[0];
                 
