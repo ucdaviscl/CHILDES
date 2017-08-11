@@ -15,7 +15,6 @@ fdict = {} # dictionary with word / word count pairs
 lines = defaultdict( list )
 output = []
 i = 0
-p = 0
 
 # generate frequency distribution based on all words in CHILDES corpus
 all_words_reader = WordListCorpusReader( '.', all_words )
