@@ -14,19 +14,13 @@ fdict = {} # dictionary with word / word count pairs
 lines = defaultdict( list )
 output = []
 i = 0
-p = 0
 
 reader = WordListCorpusReader( '.', words )
 words = reader.words() # grab word from each line of text
 fdist = FreqDist( w.lower() for w in words ) # generate frequency distribution
 
-print("frequency distribution generated\n")
-
 for w in words:
     fdict[w] = fdist.freq(w) # get frequency of each word in vocabulary
-    print("frequency of ", w, "calculated: iteration ", p, "\n")
-    p = p + 1
-print("frequencies calculated\n")
     
 with open( 'long2short_unigrams.txt', 'w' ) as file1, open( text, 'r' ) as file2:
         for line in file2:
@@ -50,7 +44,6 @@ with open( 'long2short_unigrams.txt', 'w' ) as file1, open( text, 'r' ) as file2
 
                 output = []
                 
-            print("iteration completed\n")
             i = i + 1
             
 print("--- Execution time: %s minutes ---" % ((time.time() - start_time)/60))
