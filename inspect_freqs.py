@@ -25,33 +25,36 @@ with open( infile, 'r' ) as file1, open( "pp_word_freqs.txt", 'a+' ) as file2:
         
     # iterate over each line of file
     for j in range(0, len( lines ) ):
-        match = re.match("-----", lines[j][0])
+        match = re.match( "-----", lines[j][0] )
+        sentence = re.match( "# text", lines[j][0] )
 
         # while not at end of utterance
+        if( sentence ):
+            file2.write( lines[j][0] + '\n' )
+            
         if( not match ):
             if( len(lines[j]) > 1 ):
 
                 # if current word is a prep
                 if( lines[j][3] == 'prep' ):
                     pp_count = pp_count + 1
-                    file2.write("\n pp# : " + str(pp_count) + '\n')
-                    file2.write('\n')
 
                     # if prep immediately preceded by adv
                     if( len( lines[j - 1] ) > 1 and lines[j - 1][3] == 'adv' ):
                         phrases[pp_count][lines[j - 1][1]] = lines[j - 1][8]
-                        file2.write(lines[j - 1][1] + ": " + phrases[pp_count][lines[j - 1][1]] + '\n')
+                        file2.write( lines[j - 1][1] + ": " + phrases[pp_count][lines[j - 1][1]] + '\n' )
                     
                     # add word frequencies of each word in pp
-                    for k in range(j, len( lines ) ):
+                    for k in range( j, len( lines ) ):
                         if( lines[k][7] != 'POBJ' ):
                             phrases[pp_count][lines[k][1]] = lines[k][8]
-                            file2.write(lines[k][1] + ":\t" + phrases[pp_count][lines[k][1]] + '\n')
+                            file2.write( lines[k][1] + ":\t" + phrases[pp_count][lines[k][1]] + '\n' )
                      
                         if( lines[k][7] == 'POBJ' ):
                             phrases[pp_count][lines[k][1]] = lines[k][8]
-                            file2.write(lines[k][1] + ":\t" + phrases[pp_count][lines[k][1]] + '\n')
+                            file2.write( lines[k][1] + ":\t" + phrases[pp_count][lines[k][1]] + '\n\n' )
                             break # end of pp
+
             else:
                 pp_count = 0 # reset for next utterance
                 continue
