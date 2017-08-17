@@ -16,15 +16,15 @@ pp_count = 0 # counter to keep track of prepositional phrases contained in utter
 i = 0
 
 # dictionary to contain word / word-freq pairs for prepositional phrases in utterance
-phrases = defaultdict( dict ) 
+phrases = defaultdict( dict )
 
-with open( infile, 'r' ) as file1, open( 'pp_word_freqs.txt', 'a+' ) as file2:
+with open( infile, 'r' ) as file1, open( 'same_len_pp_word_freqs.txt', 'a+' ) as file2:
 
     # get all lines of infile
     for line in file1:
         lines[i] = line.split( '\t' ) # divide line into columns
         i = i + 1
-        
+
     # iterate over each line of file
     for j in range(0, len( lines ) ):
         match = re.match( '-----', lines[j][0] )
@@ -33,7 +33,7 @@ with open( infile, 'r' ) as file1, open( 'pp_word_freqs.txt', 'a+' ) as file2:
         # while not at end of utterance
         if( sentence ):
             file2.write( lines[j][0] + '\n' )
-            
+
         if( not match ):
             if( len(lines[j]) > 1 ):
 
@@ -42,19 +42,19 @@ with open( infile, 'r' ) as file1, open( 'pp_word_freqs.txt', 'a+' ) as file2:
                     pp_count = pp_count + 1
                     phrase_prob = 1
 
-                    # if prep immediately preceded by adv
-                    if( len( lines[j - 1] ) > 1 and re.match( 'adv', lines[j - 1][3] ) ):
+                    # if immediately preceded by adv with same head as prep
+                    if( len( lines[j - 1] ) > 1 and ( re.match( 'adv', lines[j - 1][3] ) and lines[j - 1][6] == lines[j][6] ) ):
                         phrases[pp_count][lines[j - 1][1]] = lines[j - 1][8]
                         phrase_prob = phrase_prob * float(lines[j - 1][8])
                         file2.write( lines[j - 1][1] + ':\t' + phrases[pp_count][lines[j - 1][1]] + '\n' )
-                    
+
                     # add word frequencies of each word in pp
                     for k in range( j, len( lines ) ):
                         if( lines[k][7] != 'POBJ' ):
                             phrases[pp_count][lines[k][1]] = lines[k][8]
                             phrase_prob = phrase_prob * float(lines[k][8])
                             file2.write( lines[k][1] + ':\t' + phrases[pp_count][lines[k][1]] + '\n' )
-                     
+
                         if( lines[k][7] == 'POBJ' ):
                             phrases[pp_count][lines[k][1]] = lines[k][8]
                             phrase_prob = phrase_prob * float(lines[k][8])
@@ -66,13 +66,13 @@ with open( infile, 'r' ) as file1, open( 'pp_word_freqs.txt', 'a+' ) as file2:
         else:
             if( phrase_probs[0] > phrase_probs[1] ):
                 file2.write( 'pp1 is more probable than pp2 by:\t' + str(phrase_probs[0] - phrase_probs[1]) + '\n\n' )
-            
+
             elif( phrase_probs[0] < phrase_probs[1] ):
                 file2.write( 'pp2 is more probable than pp1 by:\t' + str(phrase_probs[1] - phrase_probs[0]) + '\n\n' )
-            
+
             else:
                 file2.write( 'pp1 and pp2 are equally probable \n\n' )
-                
+
             pp_count = 0 # reset for next utterance
             phrase_probs = []
             continue
