@@ -1,3 +1,4 @@
+
 #!/usr/bin/perl
 
 use strict;
@@ -12,6 +13,8 @@ my $outfile = "advoutput.txt";
 open my $fh, '>', $outfile or die "Cannot open $outfile\n";
 
 foreach my $fname ( @flist ) {
+print "hello\n";
+
   open FP, $fname or die "Cannot open $fname\n";
 
   my $str = "";
@@ -45,6 +48,7 @@ foreach my $fname ( @flist ) {
 
     # get length of sentence
     for( my $k = 0; $k < @lines; $k++ ) {
+        print "over here\n";
          @{$cols{$k}} = split "\t", $lines[$k]; 
 
          if( $cols{$k}->[0] =~ /^\d/ ) {
@@ -62,15 +66,18 @@ foreach my $fname ( @flist ) {
   my $idx = 0;
   
   for( my $i = 0; $i < @lines; $i++ ) {
+    print "here\n";
      if( $cols{$i}->[3] =~ /prep/ ) {
         push @phrase_idxs, $cols{$i}->[0]; # push prep index
 
-        if( $cols{$i - 1}->[3] =~ /adv/ ) {
-            push @phrase_idxs, $cols{$i - 1}->[0]; # if immediately preceded by adv, push adv index
+        # if immediately preceded by adv with same head as prep, push adv index
+        if( $cols{$i - 1}->[3] =~ /adv/ && $cols{$i - 1}->[6] == $cols{$i}->[6] ) {
+            push @phrase_idxs, $cols{$i - 1}->[0];
         }
 
         for( my $j = $i + 1; $j < @lines; $j++ ) {
             if( $cols{$j}->[7] =~ /POBJ/ ) {
+                print "in here\n";
                 push @phrase_idxs, $cols{$j}->[0];
                 push @stack, $cols{$j}->[0];
                 
