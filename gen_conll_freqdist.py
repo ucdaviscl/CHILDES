@@ -16,13 +16,13 @@ with open(infile, 'r') as file1, open('conllwords.txt', 'w+') as file2:
         line = line.split('\t') # divide CoNLL-formatted file into columns
         if(len(line) > 1):
             file2.write('{}\n'.format(line[1])) # get second column of CoNLL file
-    
+
 reader = WordListCorpusReader('.', 'conllwords.txt')
 
 words = reader.words() # grab word from each line of text
-fdist = FreqDist(w.lower() for w in words) # generate frequency distribution
+fdist = FreqDist(w for w in words) # generate frequency distribution
 
 # output frequency distribution to file
-with open('conll_fdist_words.txt', 'w') as outfile:
+with open('conllvocab.txt', 'w') as outfile:
     for f in fdist:
         outfile.write('%s\n' % (f))
