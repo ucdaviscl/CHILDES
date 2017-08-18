@@ -10,6 +10,7 @@ infile = sys.argv[1] # file containing CoNLL-formatted text with word frequencie
 # dictionary to contain lines of infile
 lines = defaultdict( list )
 phrase_probs = []
+morph_counts = [] # holds total morpheme counts for each pp
 
 phrase_prob = 1 # unigram probability of prepositional phrase
 pp_count = 0 # counter to keep track of prepositional phrases contained in utterance
@@ -104,6 +105,7 @@ with open( infile, 'r' ) as file1, open( 'morph_inspect.txt', 'a+' ) as file2:
                                     morph_count = morph_count + 1
                                     print( 'updated morph count is: ' + str( morph_count ) ) 
 
+                        # end of prepositional phrase
                         if( lines[k][7] == 'POBJ' ):
                             phrases[pp_count][lines[k][1]] = lines[k][8]
                             phrase_prob = phrase_prob * float(lines[k][8])
@@ -127,7 +129,10 @@ with open( infile, 'r' ) as file1, open( 'morph_inspect.txt', 'a+' ) as file2:
                                 # if word contains no lowercase letters, increment morph_count
                                 else:
                                     morph_count = morph_count + 1
-                                    print( 'updated morph count is: ' + str( morph_count ) )                             
+                                    print( 'updated morph count is: ' + str( morph_count ) )       
+                            
+                            morph_counts.append(morph_count)
+                            print(morph_counts)                      
                             
                             break # end of pp
 
@@ -141,9 +146,22 @@ with open( infile, 'r' ) as file1, open( 'morph_inspect.txt', 'a+' ) as file2:
             else:
                 file2.write( 'pp1 and pp2 are equally probable \n\n' )
                 
-            # TODO print pp1 and pp2 morphemes
+            file2.write( 'pp1 morpheme count: ' + str( morph_counts[0] ) + '\n' )
+            file2.write( 'pp2 morpheme count: ' + str( morph_counts[1] ) + '\n' )
+            
+            if( morph_counts[0] > morph_counts[1] ):
+                file2.write( 'pp1 contains ' + str( morph_counts[0] - morph_counts[1] ) + ' more morphemes than pp2 \n\n' )
+                
+            elif( morph_counts[0] < morph_counts[1] ):
+                file2.write( 'pp2 contains ' + str( morph_counts[1] - morph_counts[0] ) + ' more morphemes than pp1 \n\n' )
+
+            else:
+                file2.write( 'pp1 and pp2 have the same number of morphemes \n\n' )
+                
+            file2.write( '-----\n\n' )
 
             pp_count = 0 # reset for next utterance
             morph_count = 1
             phrase_probs = []
+            morph_counts = []
             continue
