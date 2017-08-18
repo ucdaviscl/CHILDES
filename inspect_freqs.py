@@ -13,12 +13,13 @@ phrase_probs = []
 
 phrase_prob = 1 # unigram probability of prepositional phrase
 pp_count = 0 # counter to keep track of prepositional phrases contained in utterance
+morph_count = 0 # counter to keep track of number of morphemes in prepositional phrase
 i = 0
 
 # dictionary to contain word / word-freq pairs for prepositional phrases in utterance
 phrases = defaultdict( dict )
 
-with open( infile, 'r' ) as file1, open( 'same_len_pp_word_freqs.txt', 'a+' ) as file2:
+with open( infile, 'r' ) as file1, open( 'child_inspect.txt', 'a+' ) as file2:
 
     # get all lines of infile
     for line in file1:
@@ -47,6 +48,16 @@ with open( infile, 'r' ) as file1, open( 'same_len_pp_word_freqs.txt', 'a+' ) as
                         phrases[pp_count][lines[j - 1][1]] = lines[j - 1][8]
                         phrase_prob = phrase_prob * float(lines[j - 1][8])
                         file2.write( lines[j - 1][1] + ':\t' + phrases[pp_count][lines[j - 1][1]] + '\n' )
+                        
+                    # TODO inspect morphemes
+                        
+                    """
+                    
+                    a morpheme is delimited by '&' or '-'
+                    if the delimiter is followed by capital letters and/or numbers
+                    if followed by lowercase letters and/or numbers, not a morpheme
+                    
+                    """
 
                     # add word frequencies of each word in pp
                     for k in range( j, len( lines ) ):
