@@ -19,7 +19,10 @@ i = 0
 # dictionary to contain word / word-freq pairs for prepositional phrases in utterance
 phrases = defaultdict( dict )
 
-with open( infile, 'r' ) as file1, open( 'child_inspect.txt', 'a+' ) as file2:
+# regular expression to split words on morpheme boundaries
+regex = re.compile( '[a-z]+' )
+
+with open( infile, 'r' ) as file1, open( 'morph_inspect.txt', 'a+' ) as file2:
 
     # get all lines of infile
     for line in file1:
@@ -49,7 +52,24 @@ with open( infile, 'r' ) as file1, open( 'child_inspect.txt', 'a+' ) as file2:
                         phrase_prob = phrase_prob * float(lines[j - 1][8])
                         file2.write( lines[j - 1][1] + ':\t' + phrases[pp_count][lines[j - 1][1]] + '\n' )
                         
-                    # TODO inspect morphemes
+                        # inspect morphemes
+                        
+                        temp = filter( None, re.split( '\&|\-', lines[j - 1][1] ) ) # split word on morpheme delimeters
+                        morph_count = morph_count + 1
+                        
+                        # inspect temp for lowercase letters
+                        
+                        for w in temp:
+                            print(w)
+                        
+                            # if word contains lowercase letters, do not increment morph_count
+                            if( regex.match( w ) ):
+                                print( 'current morph count is: ' + str( morph_count ) )
+                                
+                            # if word contains no lowercase letters, increment morph_count
+                            else:
+                                morph_count = morph_count + 1
+                                print( 'updated morph count is: ' + str( morph_count ) ) 
                         
                     """
                     
@@ -65,6 +85,24 @@ with open( infile, 'r' ) as file1, open( 'child_inspect.txt', 'a+' ) as file2:
                             phrases[pp_count][lines[k][1]] = lines[k][8]
                             phrase_prob = phrase_prob * float(lines[k][8])
                             file2.write( lines[k][1] + ':\t' + phrases[pp_count][lines[k][1]] + '\n' )
+                            
+                            # inspect morphemes
+                            
+                            temp = filter( None, re.split( '\&|\-', lines[k][1] ) ) # split word on morpheme delimeters
+                            morph_count = morph_count + 1
+                            
+                            # inspect temp for lowercase letters
+                            for w in temp:
+                                print(w)
+                            
+                                # if word contains lowercase letters, do not increment morph_count
+                                if( regex.match( w ) ):
+                                    print( 'current morph count is: ' + str( morph_count ) )
+                                    
+                                # if word contains no lowercase letters, increment morph_count
+                                else:
+                                    morph_count = morph_count + 1
+                                    print( 'updated morph count is: ' + str( morph_count ) ) 
 
                         if( lines[k][7] == 'POBJ' ):
                             phrases[pp_count][lines[k][1]] = lines[k][8]
@@ -72,6 +110,25 @@ with open( infile, 'r' ) as file1, open( 'child_inspect.txt', 'a+' ) as file2:
                             phrase_probs.append(phrase_prob)
                             file2.write( lines[k][1] + ':\t' + phrases[pp_count][lines[k][1]] + '\n\n' )
                             file2.write( 'phrase unigram probability:\t' + str(phrase_prob) + '\n\n' )
+                            
+                            # inspect morphemes
+                            
+                            temp = filter( None, re.split( '\&|\-', lines[k][1] ) ) # split word on morpheme delimeters
+                            morph_count = morph_count + 1
+                            
+                            # inspect temp for lowercase letters
+                            for w in temp:
+                                print(w)
+                            
+                                # if word contains lowercase letters, do not increment morph_count
+                                if( regex.match( w ) ):
+                                    print( 'current morph count is: ' + str( morph_count ) )
+                                    
+                                # if word contains no lowercase letters, increment morph_count
+                                else:
+                                    morph_count = morph_count + 1
+                                    print( 'updated morph count is: ' + str( morph_count ) )                             
+                            
                             break # end of pp
 
         else:
@@ -83,7 +140,10 @@ with open( infile, 'r' ) as file1, open( 'child_inspect.txt', 'a+' ) as file2:
 
             else:
                 file2.write( 'pp1 and pp2 are equally probable \n\n' )
+                
+            # TODO print pp1 and pp2 morphemes
 
             pp_count = 0 # reset for next utterance
+            morph_count = 1
             phrase_probs = []
             continue
