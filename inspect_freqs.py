@@ -23,6 +23,12 @@ phrases = defaultdict( dict )
 # regular expression to split words on morpheme boundaries
 regex = re.compile( '[a-z]+' )
 
+"""
+
+TODO: create function to get morphemes
+
+"""
+
 with open( infile, 'r' ) as file1, open( 'morph_inspect.txt', 'a+' ) as file2:
 
     # get all lines of infile
@@ -132,7 +138,9 @@ with open( infile, 'r' ) as file1, open( 'morph_inspect.txt', 'a+' ) as file2:
                                     print( 'updated morph count is: ' + str( morph_count ) )       
                             
                             morph_counts.append(morph_count)
-                            print(morph_counts)                      
+                            print(morph_counts)         
+                            
+                            morph_count = 0 # reset for next prepositional phrase             
                             
                             break # end of pp
 
