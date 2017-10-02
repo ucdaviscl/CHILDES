@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 # converts .cha Japanese files to CONLL format
+# TODO clean up column entries
 
 use strict;
 use File::Find::Rule;
