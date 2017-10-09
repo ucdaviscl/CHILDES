@@ -25,8 +25,7 @@ foreach my $fname ( @flist ) {
     }
     
     # grab CHI info up to and including age
-    
-    if( $header =~ /([a-zA-Z]+)\|([a-zA-Z]+)\|(CHI)\|(\d+;*\d*\.*\d*)\|/ ) {
+    if( $header =~ /([a-zA-Z]+)\|([a-zA-Z]+\d*)\|(CHI)\|(\d+;*\d*\.*\d*)\|/ ) {
         $age = $4;
     }
 
