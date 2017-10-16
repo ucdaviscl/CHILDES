@@ -1,3 +1,6 @@
+# TODO group ages in 6-month intervals
+# TODO normalize frequencies 
+
 import re, sys, nltk
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,11 +44,13 @@ fig = plt.figure()
 
 axes = fig.add_subplot(111)
 
-axes.set_title('title')    
-axes.set_xlabel('x')
-axes.set_ylabel('y')
+axes.set_title('Child age vs. Instances of 2 PPs with Same Head')    
+axes.set_xlabel('Child Ages')
+axes.set_ylabel('Total # of Instances of 2 PPs with Same Head')
 
-axes.plot(x, y,'md', label='the data')
+plt.xticks(np.arange(1, 13, 0.5))
+
+axes.plot(x, y,'md', label='Age Group')
 
 leg = axes.legend()
 
