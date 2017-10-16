@@ -9,6 +9,9 @@ my $dirname = shift;
     my @flist = File::Find::Rule->file()
                                 ->name( '*.cha' )
                                 ->in( $dirname );
+                                
+my $outfile = "all_child_utterances.txt";
+open my $fh, '>', $outfile or die "Cannot open $outfile\n";
 
 foreach my $fname ( @flist ) {
 
@@ -41,14 +44,24 @@ foreach my $fname ( @flist ) {
     for( my $i = 0; $i < @lines; $i++ ) {
 
         if( $lines[$i] =~ /\*/ ) {
-            print "# file name: $fname\n";
-            print "# child age:\t$age\n";
-            print "# line number: $i\n";
-            print "# text = $lines[$i]\n\n";
+        
+            # output all child utterances to file 
+            if( $lines[$i] =~ /\*CHI/ ) {
+                print $fh "# file name: $fname\n";
+                print $fh "# child age:\t$age\n";
+                print $fh "# line number: $i\n";
+                print $fh "# text = $lines[$i]\n\n";
             
-            if( $lines[$i + 1] !~ /^\%mor:/ ) {
-                print "\n-----\n\n";
+                print $fh "\n-----\n\n";
             }
+                print "# file name: $fname\n";
+                print "# child age:\t$age\n";
+                print "# line number: $i\n";
+                print "# text = $lines[$i]\n\n";
+            
+                if( $lines[$i + 1] !~ /^\%mor:/ ) {
+                    print "\n-----\n\n";
+                }
         }
 
         if( $lines[$i] =~ /^\%mor:/ ) {
