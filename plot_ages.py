@@ -1,9 +1,4 @@
-# TODO group ages in 6-month intervals
-# TODO normalize frequencies 
-
 import re, sys, nltk
-import numpy as np
-import matplotlib.pyplot as plt
 from collections import defaultdict
 from nltk.probability import FreqDist
 from nltk.corpus.reader import WordListCorpusReader
@@ -11,15 +6,15 @@ from nltk.corpus.reader import WordListCorpusReader
 i = 0
 ages = []
 lines = defaultdict( list )
-infile = sys.argv[1] # file containing PPs/ child ages to plot
 
+infile = sys.argv[1]
 
 regex = re.compile('# child age:\t(\d+\;*\d*)(\.*\d*)')
 
 # write ages from infile to intermediate file
 # intermediate file will have one age per line
-with open(infile, 'r') as file1, open('ages.txt', 'w+') as file2:
-    for line in file1:
+with open(infile, 'r') as fp1, open(infile + '_fdist.txt', 'w+') as fp2:
+    for line in fp1:
         lines[i] = line
         found = regex.search(line) # search for child age on line
          
@@ -32,26 +27,7 @@ with open(infile, 'r') as file1, open('ages.txt', 'w+') as file2:
         i = i + 1
         
     fdist = FreqDist(a for a in ages)
-
-# plot data using matplotlib
-# y axis: total number of 2PP occurrences
-# x axis: child age
-
-x = [a for a in ages]
-y = [fdist[a] for a in ages]
-
-fig = plt.figure()
-
-axes = fig.add_subplot(111)
-
-axes.set_title('Child age vs. Instances of 2 PPs with Same Head')    
-axes.set_xlabel('Child Ages')
-axes.set_ylabel('Total # of Instances of 2 PPs with Same Head')
-
-plt.xticks(np.arange(1, 13, 0.5))
-
-axes.plot(x, y,'md', label='Age Group')
-
-leg = axes.legend()
-
-plt.show()
+   
+    for a in fdist:
+        print(str(a) + ': ' + str(fdist[a]) +'\n')
+        fp2.write(str(a) + '\t' + str(fdist[a]) + '\n')
